@@ -3,16 +3,12 @@
 """
 
 
-def minOperations(n: int):
+def minOperations(n):
     """calculates the fewest number of operations
     needed to result in exactly n H characters in a file.
     """
     if not isinstance(n, int):
         return 0
-
-    if n <= 1:
-        return n
-
     operations = 0
     clipboard = 0
     cur_content = 1
@@ -33,4 +29,5 @@ def minOperations(n: int):
         elif clipboard > 0:
             cur_content += clipboard
             operations += 1
+
     return operations
