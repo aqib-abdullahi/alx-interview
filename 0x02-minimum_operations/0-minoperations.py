@@ -7,20 +7,30 @@ def minOperations(n: int):
     """calculates the fewest number of operations
     needed to result in exactly n H characters in a file.
     """
+    if not isinstance(n, int):
+        return 0
+
     if n <= 1:
         return n
 
     operations = 0
     clipboard = 0
-    current_content = 1
+    cur_content = 1
 
-    while current_content < n:
-        if n % current_content == 0:
-            clipboard = current_content
-        current_content += clipboard
-        operations += 1
-
-    if current_content == n:
-        return operations
-    else:
-        return 0
+    while cur_content < n:
+        # if n % current_content == 0:
+        #     clipboard = current_content
+        # current_content += clipboard
+        # operations += 1
+        if clipboard == 0:
+            clipboard = cur_content
+            cur_content += clipboard
+            operations += 2
+        elif n - cur_content > 0 and (n - cur_content) % cur_content == 0:
+            clipboard = cur_content
+            cur_content += clipboard
+            operations += 2
+        elif clipboard > 0:
+            cur_content += clipboard
+            operations += 1
+    return operations
