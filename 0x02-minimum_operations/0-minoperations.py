@@ -3,7 +3,7 @@
 """
 
 
-def minOperations(n):
+def minOperations(n: int):
     """calculates the fewest number of operations
     needed to result in exactly n H characters in a file.
     """
