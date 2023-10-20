@@ -2,34 +2,28 @@
 """log parsing task
 """
 import sys
-from collections import defaultdict
 
 
-total_file_size = 0
-status_code_count = defaultdict(int)
-line_count = 0
-
+file_size = 0
+status_codes = {"200": 0, "301": 0, "400": 0, "401": 0,
+                "403": 0, "404": 0, "405": 0, "500": 0}
 
 try:
-    for line in sys.stdin:
-        parts = line.split()
-        if len(parts) == 7:
-            ip_address, _, _, _, status_code,
-            file_size = parts[0], parts[5], parts[6]
+    for i, line in enumerate(sys.stdin, 1):
+        splited = line.split(" ")
+        if len(splited) < 2:
+            continue
+        if splited[-2] in status_codes:
+            status_codes[splited[-2]] += 1
+        file_size += eval(splited[-1])
+        if i % 10 == 0:
+            print("File size: {}".format(file_size))
+            for key, value in sorted(status_codes.items()):
+                if value > 0:
+                    print("{}: {}".format(key, value))
+finally:
+    print("File size: {}".format(file_size))
+    for key, value in sorted(status_codes.items()):
+        if value > 0:
+            print("{}: {}".format(key, value))
 
-            if status_code.isdigit():
-                status_code = int(status_code)
-                file_size = int(file_size)
-                total_file_size += file_size
-                status_code_count[status_code] += 1
-                line_count += 1
-
-            if line_count % 10 == 0:
-                print(f"Total file size: {total_file_size}")
-                for code in sorted(status_code_count.keys()):
-                    print(f"{code}: {status_code_count[code]}")
-
-except KeyboardInterrupt:
-    print(f"Total file size: {total_file_size}")
-    for code in sorted(status_code_count.keys()):
-        print(f"{code}: {status_code_count[code]}")
